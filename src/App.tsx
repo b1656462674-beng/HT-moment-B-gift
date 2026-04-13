@@ -19,6 +19,7 @@ export default function App() {
   const [coins, setCoins] = useState('0');
   const [isDisplayEnabled, setIsDisplayEnabled] = useState(false);
   const [isAnimationEnabled, setIsAnimationEnabled] = useState(false);
+  const [animationType, setAnimationType] = useState<'GRAVITY' | 'NICKNAME'>('GRAVITY');
   const [expiry, setExpiry] = useState('24h');
 
   // Logic for "Post Animation Gift"
@@ -329,6 +330,35 @@ export default function App() {
                 </label>
               ))}
               <p className="w-full text-red-400 text-xs mt-1">*必须选择类型</p>
+            </div>
+          </div>
+
+          {/* Animation Type */}
+          <div className="flex items-center gap-4">
+            <label className="w-32 text-right text-sm">
+              <span className="text-red-500 mr-1">*</span>动效类型
+            </label>
+            <div className="flex items-center gap-6">
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
+                <input
+                  type="radio"
+                  name="animationType"
+                  checked={animationType === 'GRAVITY'}
+                  onChange={() => setAnimationType('GRAVITY')}
+                  className="w-4 h-4 text-blue-600"
+                />
+                重力感应
+              </label>
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
+                <input
+                  type="radio"
+                  name="animationType"
+                  checked={animationType === 'NICKNAME'}
+                  onChange={() => setAnimationType('NICKNAME')}
+                  className="w-4 h-4 text-blue-600"
+                />
+                昵称效果
+              </label>
             </div>
           </div>
 
