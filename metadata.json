@@ -1,0 +1,5 @@
+{
+  "name": "Gift Resource Pool Management",
+  "description": "A management interface for configuring virtual gifts in live voice chat, including support for post animation gifts with conditional form logic.",
+  "requestFramePermissions": []
+}
