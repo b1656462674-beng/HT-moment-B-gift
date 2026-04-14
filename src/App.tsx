@@ -19,19 +19,8 @@ export default function App() {
   const [coins, setCoins] = useState('0');
   const [isDisplayEnabled, setIsDisplayEnabled] = useState(false);
   const [isAnimationEnabled, setIsAnimationEnabled] = useState(false);
-  const [animationType, setAnimationType] = useState<'GRAVITY' | 'NICKNAME'>('GRAVITY');
+  const [animationType, setAnimationType] = useState<'GRAVITY'>('GRAVITY');
   const [expiry, setExpiry] = useState('24h');
-
-  // Logic for "Post Animation Gift"
-  useEffect(() => {
-    if (giftType === 'POST_ANIMATION') {
-      setShowInWall('HIDE');
-      setIsWishGift('NO');
-      setGiftTags([]);
-    }
-  }, [giftType]);
-
-  const isPostAnimation = giftType === 'POST_ANIMATION';
 
   return (
     <div className="min-h-screen bg-[#f0f2f5] p-4 md:p-8">
@@ -103,24 +92,22 @@ export default function App() {
               <span className="text-red-500 mr-1">*</span>是否在礼物墙展示
             </label>
             <div className="flex items-center gap-6">
-              <label className={`flex items-center gap-2 text-sm cursor-pointer ${isPostAnimation ? 'opacity-50 cursor-not-allowed' : ''}`}>
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
                 <input
                   type="radio"
                   name="showWall"
                   checked={showInWall === 'SHOW'}
-                  onChange={() => !isPostAnimation && setShowInWall('SHOW')}
-                  disabled={isPostAnimation}
+                  onChange={() => setShowInWall('SHOW')}
                   className="w-4 h-4 text-blue-600"
                 />
                 展示
               </label>
-              <label className={`flex items-center gap-2 text-sm cursor-pointer ${isPostAnimation ? 'opacity-50 cursor-not-allowed' : ''}`}>
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
                 <input
                   type="radio"
                   name="showWall"
                   checked={showInWall === 'HIDE'}
-                  onChange={() => !isPostAnimation && setShowInWall('HIDE')}
-                  disabled={isPostAnimation}
+                  onChange={() => setShowInWall('HIDE')}
                   className="w-4 h-4 text-blue-600"
                 />
                 不展示
@@ -134,24 +121,22 @@ export default function App() {
               <span className="text-red-500 mr-1">*</span>是否心愿礼物
             </label>
             <div className="flex items-center gap-6">
-              <label className={`flex items-center gap-2 text-sm cursor-pointer ${isPostAnimation ? 'opacity-50 cursor-not-allowed' : ''}`}>
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
                 <input
                   type="radio"
                   name="wishGift"
                   checked={isWishGift === 'YES'}
-                  onChange={() => !isPostAnimation && setIsWishGift('YES')}
-                  disabled={isPostAnimation}
+                  onChange={() => setIsWishGift('YES')}
                   className="w-4 h-4 text-blue-600"
                 />
                 是
               </label>
-              <label className={`flex items-center gap-2 text-sm cursor-pointer ${isPostAnimation ? 'opacity-50 cursor-not-allowed' : ''}`}>
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
                 <input
                   type="radio"
                   name="wishGift"
                   checked={isWishGift === 'NO'}
-                  onChange={() => !isPostAnimation && setIsWishGift('NO')}
-                  disabled={isPostAnimation}
+                  onChange={() => setIsWishGift('NO')}
                   className="w-4 h-4 text-blue-600"
                 />
                 否
@@ -159,74 +144,56 @@ export default function App() {
             </div>
           </div>
 
-          {/* Conditional Animation/Image Upload */}
-          <AnimatePresence mode="wait">
-            {!isPostAnimation ? (
-              <motion.div
-                key="normal-animation"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="space-y-6"
-              >
-                <div className="flex items-center gap-4">
-                  <label className="w-32 text-right text-sm">动画文件</label>
-                  <div className="flex-1 flex gap-2">
-                    <input
-                      type="text"
-                      className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm bg-gray-50"
-                      readOnly
-                    />
-                    <button className="bg-blue-600 text-white px-4 py-2 rounded text-sm flex items-center gap-1 hover:bg-blue-700 transition-colors">
-                      <Upload className="w-4 h-4" /> 上传
-                    </button>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <label className="w-32 text-right text-sm">动画文件大小</label>
-                  <div className="flex items-center gap-6">
-                    {['160dp', '280dp', '全屏'].map((size) => (
-                      <label key={size} className="flex items-center gap-2 text-sm cursor-pointer">
-                        <input type="radio" name="animSize" className="w-4 h-4 text-blue-600" />
-                        {size}
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="post-animation"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="space-y-3"
-              >
-                <div className="flex items-center gap-4">
-                  <label className="w-32 text-right text-sm">
-                    <span className="text-red-500 mr-1">*</span>上传图片资源
+          {/* Animation File / Size */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-4">
+              <label className="w-32 text-right text-sm">动画文件</label>
+              <div className="flex-1 flex gap-2">
+                <input
+                  type="text"
+                  className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm bg-gray-50"
+                  readOnly
+                />
+                <button className="bg-blue-600 text-white px-4 py-2 rounded text-sm flex items-center gap-1 hover:bg-blue-700 transition-colors">
+                  <Upload className="w-4 h-4" /> 上传
+                </button>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <label className="w-32 text-right text-sm">动画文件大小</label>
+              <div className="flex items-center gap-6">
+                {['160dp', '280dp', '全屏'].map((size) => (
+                  <label key={size} className="flex items-center gap-2 text-sm cursor-pointer">
+                    <input type="radio" name="animSize" className="w-4 h-4 text-blue-600" />
+                    {size}
                   </label>
-                  <div className="flex-1 flex gap-2">
+                ))}
+              </div>
+            </div>
+
+            {/* Display Style - Conditional on Gravity Sensing */}
+            {animationType === 'GRAVITY' && (
+              <div className="flex items-start gap-4">
+                <label className="w-32 text-right text-sm pt-2">
+                  <span className="text-red-500 mr-1">*</span>展示样式
+                </label>
+                <div className="flex-1 space-y-1">
+                  <div className="flex gap-2">
                     <input
                       type="text"
                       className="flex-1 border border-gray-300 rounded px-3 py-2 text-sm bg-gray-50"
                       readOnly
-                      placeholder="请上传图片资源"
+                      placeholder="请上传展示样式图片"
                     />
                     <button className="bg-blue-600 text-white px-4 py-2 rounded text-sm flex items-center gap-1 hover:bg-blue-700 transition-colors">
                       <Upload className="w-4 h-4" /> 上传
                     </button>
                   </div>
+                  <p className="text-red-500 text-xs">必填</p>
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="w-32"></div>
-                  <p className="text-gray-400 text-xs flex items-center gap-1">
-                    <AlertCircle className="w-3 h-3" /> 备注：图片资源要求上传1:1比例
-                  </p>
-                </div>
-              </motion.div>
+              </div>
             )}
-          </AnimatePresence>
+          </div>
 
           {/* Thumbnail */}
           <div className="flex items-start gap-4">
@@ -349,16 +316,6 @@ export default function App() {
                 />
                 重力感应
               </label>
-              <label className="flex items-center gap-2 text-sm cursor-pointer">
-                <input
-                  type="radio"
-                  name="animationType"
-                  checked={animationType === 'NICKNAME'}
-                  onChange={() => setAnimationType('NICKNAME')}
-                  className="w-4 h-4 text-blue-600"
-                />
-                昵称效果
-              </label>
             </div>
           </div>
 
@@ -374,14 +331,12 @@ export default function App() {
               ].map((tag) => (
                 <label
                   key={tag.id}
-                  className={`flex items-center gap-2 text-sm ${isPostAnimation ? 'opacity-40 cursor-not-allowed grayscale' : 'cursor-pointer'}`}
+                  className="flex items-center gap-2 text-sm cursor-pointer"
                 >
                   <input
                     type="checkbox"
-                    disabled={isPostAnimation}
                     checked={giftTags.includes(tag.id)}
                     onChange={(e) => {
-                      if (isPostAnimation) return;
                       if (e.target.checked) {
                         setGiftTags([...giftTags, tag.id]);
                       } else {
